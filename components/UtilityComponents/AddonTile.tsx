@@ -1,17 +1,56 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { addons } from "@/testData/testDb";
+import { useRecoilState } from "recoil";
+
+import { addonCart } from "@/Global states/CartItemAtoms";
 
 interface PropTypes {
   id: number;
 }
 
 export default function AddonTile({ id }: PropTypes) {
-  const [count, setCount] = useState(0);
+  const [addonCartState, setAddonCartState] = useRecoilState(addonCart);
   const currentAddon = addons.find((addon) => addon.id === id);
+  const addonInCart = addonCartState.find((item) => item.id === id);
 
-  const handleIncrement = () => setCount((prev) => prev + 1);
-  const handleDecrement = () => setCount((prev) => Math.max(0, prev - 1));
+  const count = addonInCart?.quantity || 0;
+
+  const handleIncrement = () => {
+    setAddonCartState((prev) => {
+      const existingAddon = prev.find((item) => item.id === id);
+
+      if (existingAddon) {
+        return prev.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          id: currentAddon!.id,
+          name: currentAddon!.name,
+          price: currentAddon!.price,
+          quantity: 1,
+        },
+      ];
+    });
+  };
+
+  const handleDecrement = () => {
+    setAddonCartState((prev) => {
+      const existingAddon = prev.find((item) => item.id === id);
+
+      if (existingAddon?.quantity === 1) {
+        return prev.filter((item) => item.id !== id);
+      }
+
+      return prev.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+      );
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -56,6 +95,7 @@ export default function AddonTile({ id }: PropTypes) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",

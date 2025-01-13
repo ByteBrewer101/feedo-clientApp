@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import { useRecoilState } from "recoil";
 
-import { cartState } from "@/Global states/CartItemAtoms";
+import { addonCart, cartState } from "@/Global states/CartItemAtoms";
 import { FoodItem } from "@/components/UtilityComponents/FoodItemComponent";
+import AddonTile from "@/components/UtilityComponents/AddonTile";
 
 
 //cart summary component
@@ -40,8 +41,9 @@ export const CartSummary = ({ totalAmount }: { totalAmount: number }) => (
 
 export default function Cart() {
   const [cart, setCart] = useRecoilState(cartState);
+  const [addons,setAddons]=useRecoilState(addonCart)
 
-  const totalAmount = cart.reduce(
+  const totalAmount = [...cart,...addons].reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -61,7 +63,20 @@ export default function Cart() {
     />
   );
 
-  if (cart.length === 0) {
+interface AddonItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+
+   const renderItemAddons = ({ item }: { item: AddonItem }) => (
+     <AddonTile key={item.id} id={item.id} />
+   );
+  
+
+  if (cart.length === 0 && addons.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>Your cart is empty</Text>
@@ -72,10 +87,14 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.headerText}>Your Cart ({cart.length} items)</Text>
+        <Text style={styles.headerText}>Your Cart ({cart.length + addons.length} items)</Text>
 
         {/* Render the cart items */}
         {cart.map((item) => renderItem({ item }))}
+
+        {addons.length>0 && <Text style={styles.headerText} >Extras</Text>}
+        
+        {addons.map((item)=>renderItemAddons({item}))}
 
         <View style={styles.bottomContainer}>
           <CartSummary totalAmount={totalAmount} />

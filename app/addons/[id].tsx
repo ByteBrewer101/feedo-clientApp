@@ -7,12 +7,14 @@ import {
   SafeAreaView,
   Platform,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { food, addons } from "@/testData/testDb";
 import { useLocalSearchParams } from "expo-router";
 import AddonTile from "@/components/UtilityComponents/AddonTile";
 import { CartSummary } from "../(tabs)/cart";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useExpoRouter } from "expo-router/build/global-state/router-store";
 
 type FoodItem = {
   id: number;
@@ -23,6 +25,7 @@ type FoodItem = {
 export default function AddonPage() {
   const params = useLocalSearchParams();
   const id = params.id as string | undefined;
+  const router = useExpoRouter()
 
   if (!id || isNaN(parseInt(id, 10))) {
     return (
@@ -64,10 +67,19 @@ export default function AddonPage() {
             ))}
           </View>
         </ScrollView>
+        
+        <TouchableOpacity
+                  style={styles.cartButton}
+                  onPress={() => {
+                    /* Add navigation logic to go to /tabs/cart */
+                    router.push("/(tabs)/cart");
+        
+                  }}
+                >
+                  <Text style={styles.cartButtonText}>View Cart</Text>
+                </TouchableOpacity>
 
-        <View style={styles.bottomContainer}>
-          <CartSummary totalAmount={300} />
-        </View>
+       
       </View>
     </SafeAreaView>
   );
@@ -148,28 +160,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 12,
   },
-  bottomContainer: {
+  cartButton: {
     position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "white",
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#EAEAEA",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: -3,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#ff6b00",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+    elevation: 5, // For Android shadow
+  },
+  cartButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

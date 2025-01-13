@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
+import { useRecoilState } from "recoil";
+import { favResturants } from "@/Global states/CartItemAtoms";
 
 interface TileProps {
   title: string;
@@ -35,6 +37,8 @@ const Tile = ({
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
+    
+
   };
 
   const handlePress = () => {
@@ -75,9 +79,7 @@ const Tile = ({
             </Pressable>
           </View>
 
-          <View style={styles.priceContainer}>
-            <Text style={styles.price}>{formatPrice()}</Text>
-          </View>
+         
         </View>
 
         <View style={styles.contentContainer}>

@@ -19,3 +19,23 @@ export const cartState = atom<CartItem[]>({
   default: [],
 });
 
+interface AddonItem{
+  id:number;
+  name:string;
+  price:number;
+  quantity:number
+}
+
+export const addonCart = atom<AddonItem[]>({
+  key:"addonCart",
+  default:[]
+})
+
+interface FavResturants{
+  id:number
+}
+
+export const favResturants=atom<FavResturants[]>({
+  key:"favResturants",
+  default:[]
+})

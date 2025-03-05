@@ -11,37 +11,20 @@ import { useRecoilState } from "recoil";
 import { addonCart, cartState } from "@/Global states/CartItemAtoms";
 import { FoodItem } from "@/components/UtilityComponents/FoodItemComponent";
 import AddonTile from "@/components/UtilityComponents/AddonTile";
+import { CartSummary } from "@/components/CartSummary";
 
 
-//cart summary component
-export const CartSummary = ({ totalAmount }: { totalAmount: number }) => (
-  <View style={styles.summaryContainer}>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryLabel}>Subtotal:</Text>
-      <Text style={styles.summaryValue}>${totalAmount.toFixed(2)}</Text>
-    </View>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryLabel}>Delivery Fee:</Text>
-      <Text style={styles.summaryValue}>$2.99</Text>
-    </View>
-    <View style={styles.summaryRow}>
-      <Text style={styles.summaryLabel}>Tax:</Text>
-      <Text style={styles.summaryValue}>
-        ${(totalAmount * 0.08).toFixed(2)}
-      </Text>
-    </View>
-    <View style={[styles.summaryRow, styles.totalRow]}>
-      <Text style={styles.totalLabel}>Total:</Text>
-      <Text style={styles.totalValue}>
-        ${(totalAmount + 2.99 + totalAmount * 0.08).toFixed(2)}
-      </Text>
-    </View>
-  </View>
-);
 
 export default function Cart() {
   const [cart, setCart] = useRecoilState(cartState);
   const [addons,setAddons]=useRecoilState(addonCart)
+
+
+  //set Cart using data from hook 
+
+
+
+
 
   const totalAmount = [...cart,...addons].reduce(
     (sum, item) => sum + item.price * item.quantity,

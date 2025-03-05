@@ -9,6 +9,7 @@ import {
 import Slideshow from "@/components/Slideshow/Slideshow";
 import Tile from "@/components/UtilityComponents/Tile";
 import { hotels } from "@/testData/testDb";
+import usePopulateHome from "@/hooks/usePopulateHome";
 
 interface TileData {
   id: number;
@@ -28,7 +29,15 @@ interface CombinedData {
 export default function HomeScreen() {
   const images = ["slide1", "slide2", "slide3"];
 
-const tilesData: TileData[] = hotels
+
+
+  //custom hook for the compoennt
+
+const {data}=usePopulateHome()
+  const tilesData = data
+
+//usePopulateHome Hook
+
 
 
   const combinedData: CombinedData[] = [
